@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
+  
+<!-- override the annotations for properties firstname and lastname -->
+<!--
+  <entity class="swt6.orm.simple.domain.annotated.Employee">
+    <attributes>
+     	<id name="id"><generated-value strategy="TABLE"/></id>
+      <basic name="firstName"> 
+        <column length="20" nullable="false" />
+      </basic>
+      <basic name="lastName">
+        <column length="30" nullable="false" />
+      </basic> 
+      <basic name="dateOfBirth">
+        <column column-definition="DATE" nullable="false" />
+      </basic>
+  </attributes>
+  </entity>
+ -->    
+ 
+</entity-mappings>
