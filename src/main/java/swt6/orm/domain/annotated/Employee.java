@@ -63,6 +63,8 @@ public class Employee implements Serializable {
 	@ManyToMany(mappedBy="members", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
 	private Set<Project> projects = new HashSet<>();
 
+	@OneToMany(mappedBy="leader",  cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private Set<Project> leaders = new HashSet<>();
 	// classes persisted by Hibernate must have a default constructor
 	// (newInstance of reflection API)
 	public Employee() {
@@ -161,6 +163,38 @@ public class Employee implements Serializable {
 		}
 		proj.getMembers().add(this);
 		projects.add(proj);
+	}
+	
+	public void removeProject(Project project) {
+		if (project == null) {
+			throw new IllegalArgumentException("NULL Project");
+		}
+		project.getMembers().remove(this);
+		projects.remove(project);
+	}
+
+	public Set<Project> getLeaders() {
+		return leaders;
+	}
+
+	public void setLeaders(Set<Project> leaders) {
+		this.leaders = leaders;
+	}
+	
+	public void addLeader(Project project) {
+		if (project == null) {
+			throw new IllegalArgumentException("NULL Project");
+		}
+		project.attachLeader(this);
+		projects.add(project);
+	}
+	
+	public void removeLeader(Project project) {
+		if (project == null) {
+			throw new IllegalArgumentException("NULL Project");
+		}
+		project.detachLeader();
+		projects.remove(project);
 	}
 
 	@Override

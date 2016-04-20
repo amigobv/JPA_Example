@@ -51,9 +51,11 @@ public class JPAWorkLogManager {
 		return module.getId();
 	}
 	
-	private static Long saveProject(Project project) {
+	private static Long saveProject(Project project, Employee leader) {
 		EntityManager em = JPAUtil.getTransactedEntityManager();
 		
+		leader = em.merge(leader);
+		project.attachLeader(leader);
 		em.persist(project);
 		
 		JPAUtil.commit();
@@ -161,8 +163,8 @@ public class JPAWorkLogManager {
 		empl1 = em.merge(empl1);
 		empl2 = em.merge(empl2);
 
-		Project p1 = new Project("Office");
-		Project p2 = new Project("Enterprise Server");
+		Project p1 = new Project("Office", empl1);
+		Project p2 = new Project("Enterprise Server", empl1);
 
 		empl1.addProject(p1);
 		empl1.addProject(p2);
@@ -267,13 +269,17 @@ public class JPAWorkLogManager {
 			empl2.setStartDate(DateUtil.getDate(2006, 3, 1));
 			empl2.setEndDate(DateUtil.getDate(2006, 4, 1));
 			
+			PermanentEmployee empl3 = new PermanentEmployee("Heinz", "Dobler", DateUtil.getDate(1965, 10, 13));
+			empl3.setAddress(new Address("4231", "Hagenberg","Hauptstraße 14"));
+			empl3.setSalary(6000);
+			
 			Phase proto = new Phase("Prototype");
 			Phase dev = new Phase("Development");
 			Phase mantainance = new Phase("Maintainance");
 			
+			saveEmployee(empl3);
 			Project zeus = new Project("Zeus");
-			saveProject(zeus);
-			
+			saveProject(zeus, empl3);
 			
 			Module mod1 = new Module("Module 1");
 			Module mod2 = new Module("Module 2");

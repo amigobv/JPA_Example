@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -22,7 +23,8 @@ public class Project implements Serializable {
 	@GeneratedValue
 	private Long id;
 	private String name;
-	// private Employee manager;
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, optional = false )
+	private Employee leader;
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "ProjectEmployee", joinColumns = { @JoinColumn(name = "project_id") }, inverseJoinColumns = {
@@ -38,6 +40,11 @@ public class Project implements Serializable {
 	public Project(String name) {
 		this.name = name;
 	}
+	
+	public Project(String name, Employee leader) {
+		this(name);
+		attachLeader(leader);
+	}
 
 	@SuppressWarnings("unused")
 	private void setId(Long id) {
@@ -46,6 +53,34 @@ public class Project implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Employee getLeader() {
+		return leader;
+	}
+
+	public void setLeader(Employee leader) {
+		this.leader = leader;
+	}
+	
+	public void attachLeader(Employee leader) {
+		if (leader == null)
+			throw new IllegalArgumentException("Cannot attach NULL leader!");
+		
+		if (this.leader != null) {
+			this.leader.getProjects().remove(this);
+		}
+
+		leader.getProjects().add(this);
+		this.leader = leader;
+	}
+	
+	public void detachLeader() {
+		if (leader != null) {
+			leader.getProjects().remove(this);
+		}
+		
+		leader = null;
 	}
 
 	public String getName() {

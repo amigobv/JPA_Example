@@ -75,7 +75,7 @@ public class LogbookEntry implements Serializable {
 	}
 
 	public void setEmployee(Employee employee) {
-		attachEmployee(employee);
+		this.employee = employee;
 	}
 
 	public void attachEmployee(Employee employee) {
@@ -121,7 +121,7 @@ public class LogbookEntry implements Serializable {
 	}
 
 	public void setPhase(Phase phase) {
-		attachPhase(phase);
+		this.phaseId = phase;
 	}
 	
 	public void attachPhase(Phase phase) {
@@ -149,7 +149,7 @@ public class LogbookEntry implements Serializable {
 	}
 
 	public void setModuleId(Module moduleId) {
-		attachModule(moduleId);
+		this.moduleId = moduleId;
 	}
 
 	public void attachModule(Module module) {
