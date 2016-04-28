@@ -60,7 +60,7 @@ public class Employee implements Serializable {
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<LogbookEntry> logbookEntries = new HashSet<>();
 
-	@ManyToMany(mappedBy="members", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@ManyToMany(mappedBy="members", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Project> projects = new HashSet<>();
 
 	@OneToMany(mappedBy="leader",  cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -135,8 +135,8 @@ public class Employee implements Serializable {
 			entry.getEmployee().logbookEntries.remove(entry);
 		}
 
-		logbookEntries.add(entry);
 		entry.setEmployee(this);
+		logbookEntries.add(entry);
 	}
 
 	public void removeLogbookEntry(LogbookEntry entry) {
@@ -144,8 +144,8 @@ public class Employee implements Serializable {
 			throw new IllegalArgumentException("Cannot remove NULL entry");
 		}
 		
-		entry.detachEmployee();
 		logbookEntries.remove(entry);
+		entry.detachEmployee();
 	}
 
 	public Set<Project> getProjects() {
@@ -157,7 +157,7 @@ public class Employee implements Serializable {
 		this.projects = projects;
 	}
 
-	public void addProject(Project proj) {
+	public void attachProject(Project proj) {
 		if (proj == null) {
 			throw new IllegalArgumentException("Null Project");
 		}
@@ -197,6 +197,23 @@ public class Employee implements Serializable {
 		projects.remove(project);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Employee empl = (Employee) obj;
+
+		return firstName.equals(empl.firstName) &&
+			   lastName.equals(empl.lastName) &&
+			   dateOfBirth.equals(empl.dateOfBirth);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (firstName != null && lastName != null && dateOfBirth != null)
+			return firstName.hashCode() + lastName.hashCode() + dateOfBirth.hashCode();
+		
+		return super.hashCode();
+	}
+	
 	@Override
 	public String toString() {
 		DateFormat fmt = DateFormat.getDateInstance();

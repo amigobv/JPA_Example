@@ -26,7 +26,7 @@ public class Project implements Serializable {
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, optional = false )
 	private Employee leader;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "ProjectEmployee", joinColumns = { @JoinColumn(name = "project_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "employee_id") })
 	private Set<Employee> members = new HashSet<>();
@@ -122,6 +122,24 @@ public class Project implements Serializable {
 		
 		module.setProjectId(this);
 		this.modules.add(module);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		Project proj = (Project) obj;
+
+		return name.equals(proj.name);
+	}
+	
+	@Override
+	public int hashCode() {
+		if (name != null)
+			return name.hashCode();
+		
+		if (id != null)
+			return id.hashCode();
+		
+		return super.hashCode();
 	}
 
 	@Override

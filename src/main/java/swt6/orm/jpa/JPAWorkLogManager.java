@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import org.hibernate.internal.jaxb.mapping.orm.JaxbPrimaryKeyJoinColumn;
-
 import swt6.orm.domain.annotated.Address;
 import swt6.orm.domain.annotated.Employee;
 import swt6.orm.domain.annotated.LogbookEntry;
@@ -166,8 +164,8 @@ public class JPAWorkLogManager {
 		Project p1 = new Project("Office", empl1);
 		Project p2 = new Project("Enterprise Server", empl1);
 
-		empl1.addProject(p1);
-		empl1.addProject(p2);
+		empl1.attachProject(p1);
+		empl1.attachProject(p2);
 
 		p2.addMember(empl2);
 
